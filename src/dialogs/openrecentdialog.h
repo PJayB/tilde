@@ -22,7 +22,8 @@ using namespace t3widget;
 class open_recent_dialog_t : public dialog_t {
  private:
   list_pane_t *list;
-  int known_version;
+  int known_recents_version;
+	int known_open_version;
 
  public:
   open_recent_dialog_t(int height, int width);
@@ -31,6 +32,7 @@ class open_recent_dialog_t : public dialog_t {
   virtual void ok_activated();
 
   DEFINE_SIGNAL(file_selected, recent_file_info_t *);
+  DEFINE_SIGNAL(activate, file_buffer_t *);
 };
 
 #endif

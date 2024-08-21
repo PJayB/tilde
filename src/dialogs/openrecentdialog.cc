@@ -16,9 +16,13 @@
 #include "tilde/dialogs/openrecentdialog.h"
 #include "tilde/openfiles.h"
 #include "tilde/option.h"
+#include "tilde/filebuffer.h"
 
 open_recent_dialog_t::open_recent_dialog_t(int height, int width)
-    : dialog_t(height, width, _("Open Recent")), known_version(INT_MIN) {
+    : dialog_t(height, width, _("Open Recent"))
+		, known_recents_version(INT_MIN)
+		, known_open_version(INT_MIN)
+{
   list = emplace_back<list_pane_t>(true);
   list->set_size(height - 3, width - 2);
   list->set_position(1, 1);
@@ -43,14 +47,41 @@ bool open_recent_dialog_t::set_size(optint height, optint width) {
 }
 
 void open_recent_dialog_t::show() {
-  if (recent_files.get_version() != known_version) {
-    known_version = recent_files.get_version();
+  if (recent_files.get_version() != known_recents_version || open_files.get_version() != known_open_version) {
+    known_recents_version = recent_files.get_version();
+		known_open_version = open_files.get_version();
 
     while (!list->empty()) {
       list->pop_back();
     }
 
     size_t count = 0;
+    int width = window.get_width();
+		
+		// populate with open files
+		for (const file_buffer_t* open_file : open_files) {
+      std::unique_ptr<multi_widget_t> multi_widget(new multi_widget_t());
+      multi_widget->set_size(None, width - 5);
+      multi_widget->show();
+      bullet_t *bullet = new bullet_t([open_file] { return open_file->get_has_window(); });
+      multi_widget->push_back(wrap_unique(bullet), -1, true, false);
+      const char *name = open_file->get_name().c_str();
+      if (name[0] == 0) {
+        name = "(Untitled)";
+      }
+      label_t *label = new label_t(name);
+      label->set_anchor(bullet, T3_PARENT(T3_ANCHOR_TOPRIGHT) | T3_CHILD(T3_ANCHOR_TOPLEFT));
+      label->set_align(label_t::ALIGN_LEFT_UNDERFLOW);
+      label->set_accepts_focus(true);
+      multi_widget->push_back(wrap_unique(label), 1, true, false);
+      list->push_back(std::move(multi_widget));
+      ++count;
+      if (count >= option.max_recent_files) {
+        break;
+      }
+		}
+		
+		// populate with closed files
     for (const std::unique_ptr<recent_file_info_t> &recent_file : recent_files) {
       std::unique_ptr<label_t> label(new label_t(recent_file->get_name().c_str()));
       label->set_align(label_t::ALIGN_LEFT_UNDERFLOW);
@@ -68,6 +99,11 @@ void open_recent_dialog_t::show() {
 void open_recent_dialog_t::ok_activated() {
   hide();
   if (list->size() > 0) {
-    file_selected(recent_files.get_info(list->get_current()));
+	  auto cur = list->get_current();
+		if (cur >= open_files.size()) {
+			file_selected(recent_files.get_info(cur - open_files.size()));
+		} else {
+			activate(open_files[cur]);
+		}
   }
 }
