@@ -104,11 +104,15 @@ static main_t *main_window;
 key_bindings_t<action_id_t> main_t::key_bindings{
     {action_id_t::FILE_NEW, "FileNew", {EKEY_CTRL | 'n'}},
     {action_id_t::FILE_OPEN, "FileOpen", {EKEY_CTRL | 'o'}},
+    {action_id_t::FILE_OPEN_RECENT, "FileOpenRecent", {EKEY_CTRL | 'p'}},
     {action_id_t::FILE_CLOSE, "FileClose", {EKEY_CTRL | 'w'}},
     {action_id_t::FILE_SAVE, "FileSave", {EKEY_CTRL | 's'}},
     {action_id_t::FILE_EXIT, "Exit", {EKEY_CTRL | 'q'}},
-    {action_id_t::WINDOWS_NEXT_BUFFER, "NextBuffer", {EKEY_F6, EKEY_META | '6'}},
-    {action_id_t::WINDOWS_PREV_BUFFER, "PreviousBuffer", {EKEY_F6 | EKEY_SHIFT}},
+    {action_id_t::WINDOWS_NEXT_BUFFER, "NextBuffer", {EKEY_F6, EKEY_META | ']'}},
+    {action_id_t::WINDOWS_PREV_BUFFER, "PreviousBuffer", {EKEY_META | '['}},
+    {action_id_t::WINDOWS_HSPLIT, "HSplit", {EKEY_META | '5'}},
+    {action_id_t::WINDOWS_VSPLIT, "VSplit", {EKEY_META | '\''}},
+    {action_id_t::WINDOWS_MERGE, "MergeWindows", {EKEY_META | 'w'}},
 };
 
 main_t::main_t() {
@@ -119,7 +123,7 @@ main_t::main_t() {
   panel = menu->insert_menu(nullptr, "_File");
   panel->insert_item(nullptr, "_New", "^N", action_id_t::FILE_NEW);
   panel->insert_item(nullptr, "_Open...", "^O", action_id_t::FILE_OPEN);
-  panel->insert_item(nullptr, "Open _Recent...", "", action_id_t::FILE_OPEN_RECENT);
+  panel->insert_item(nullptr, "Open _Recent...", "^P", action_id_t::FILE_OPEN_RECENT);
   panel->insert_item(nullptr, "_Close", "^W", action_id_t::FILE_CLOSE);
   panel->insert_item(nullptr, "_Save", "^S", action_id_t::FILE_SAVE);
   panel->insert_item(nullptr, "Save _As...", "", action_id_t::FILE_SAVE_AS);
@@ -156,13 +160,13 @@ main_t::main_t() {
                      action_id_t::SEARCH_GOTO_MATCHING_BRACE);
 
   panel = menu->insert_menu(nullptr, "_Window");
-  panel->insert_item(nullptr, "_Next Buffer", "F6", action_id_t::WINDOWS_NEXT_BUFFER);
-  panel->insert_item(nullptr, "_Previous Buffer", "S-F6", action_id_t::WINDOWS_PREV_BUFFER);
+  panel->insert_item(nullptr, "_Next Buffer", "M-]", action_id_t::WINDOWS_NEXT_BUFFER);
+  panel->insert_item(nullptr, "_Previous Buffer", "M-[", action_id_t::WINDOWS_PREV_BUFFER);
   panel->insert_item(nullptr, "_Select Buffer...", "", action_id_t::WINDOWS_SELECT);
   panel->insert_separator();
-  panel->insert_item(nullptr, "Split _Horizontal", "", action_id_t::WINDOWS_HSPLIT);
-  panel->insert_item(nullptr, "Split _Vertical", "", action_id_t::WINDOWS_VSPLIT);
-  panel->insert_item(nullptr, "_Close Window", "", action_id_t::WINDOWS_MERGE);
+  panel->insert_item(nullptr, "Split _Horizontal", "M-5", action_id_t::WINDOWS_HSPLIT);
+  panel->insert_item(nullptr, "Split _Vertical", "M-'", action_id_t::WINDOWS_VSPLIT);
+  panel->insert_item(nullptr, "_Close Split", "M-W", action_id_t::WINDOWS_MERGE);
   panel->insert_item(nullptr, "Next Window", "F8", action_id_t::WINDOWS_NEXT_WINDOW);
   panel->insert_item(nullptr, "Previous Window", "S-F8", action_id_t::WINDOWS_PREV_WINDOW);
 
