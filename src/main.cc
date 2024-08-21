@@ -465,9 +465,13 @@ void main_t::menu_activated(int id) {
       std::unique_ptr<file_edit_window_t> widget(
           static_cast<file_edit_window_t *>(split->unsplit().release()));
       if (widget == nullptr) {
-        message_dialog->set_message("Can not close the last window.");
+				/*
+				pjb: I'd prefer this just "do nothing"
+				
+        message_dialog->set_message("Cannot close the last window.");
         message_dialog->center_over(this);
         message_dialog->show();
+				*/
       } else {
         file_buffer_t *text = widget->get_text();
         edit_windows.erase(widget.get());
