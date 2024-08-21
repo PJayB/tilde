@@ -237,6 +237,7 @@ main_t::main_t() {
 
   open_recent_dialog = new open_recent_dialog_t(11, window.get_width() - 4);
   open_recent_dialog->center_over(this);
+  open_recent_dialog->connect_activate(bind_front(&main_t::switch_buffer, this));
 
   about_dialog = t3widget::make_unique<message_dialog_t>(
       45, std::string("About"), std::initializer_list<string_view>{"Close"});
