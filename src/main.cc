@@ -788,7 +788,9 @@ int main(int argc, char *argv[]) {
   std::unique_ptr<init_parameters_t> params(init_parameters_t::create());
   std::string config_file_name;
 
+#ifdef DEBUG
   init_log();
+#endif
   setlocale(LC_ALL, "");
   // FIXME: call this when internationalization is started. Requires #include <libintl.h>
   // bind_textdomain_codeset("UTF-8");
