@@ -107,6 +107,7 @@ key_bindings_t<action_id_t> main_t::key_bindings{
     {action_id_t::FILE_OPEN_RECENT, "FileOpenRecent", {EKEY_CTRL | 'p'}},
     {action_id_t::FILE_CLOSE, "FileClose", {EKEY_CTRL | 'w'}},
     {action_id_t::FILE_SAVE, "FileSave", {EKEY_CTRL | 's'}},
+		{action_id_t::FILE_SUSPEND, "FileSuspend", {EKEY_META | 'z'}},
     {action_id_t::FILE_EXIT, "Exit", {EKEY_CTRL | 'q'}},
     {action_id_t::WINDOWS_NEXT_BUFFER, "NextBuffer", {EKEY_F6, EKEY_META | ']'}},
     {action_id_t::WINDOWS_PREV_BUFFER, "PreviousBuffer", {EKEY_META | '['}},
@@ -129,7 +130,7 @@ main_t::main_t() {
   panel->insert_item(nullptr, "Save _As...", "", action_id_t::FILE_SAVE_AS);
   panel->insert_separator();
   panel->insert_item(nullptr, "Re_draw Screen", "", action_id_t::FILE_REPAINT);
-  panel->insert_item(nullptr, "S_uspend", "", action_id_t::FILE_SUSPEND);
+  panel->insert_item(nullptr, "S_uspend", "M-Z", action_id_t::FILE_SUSPEND);
   panel->insert_item(nullptr, "E_xit", "^Q", action_id_t::FILE_EXIT);
 
   panel = menu->insert_menu(nullptr, "_Edit");
