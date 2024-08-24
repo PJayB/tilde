@@ -239,6 +239,9 @@ PARSE_FUNCTION(parse_args)
       cli_option.disable_file_position_parsing = true;
     END_OPTION
 #ifdef DEBUG
+    LONG_OPTION("log", NO_ARG)
+      cli_option.log = true;
+    END_OPTION
     LONG_OPTION("W", NO_ARG)
       cli_option.wait = true;
     END_OPTION

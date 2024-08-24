@@ -41,6 +41,7 @@ struct cli_options_t {
   bool wait;
   int vm_limit;
   bool start_debugger_on_segfault;
+  bool log;
 #endif
   optional<std::string> config_file;
   optional<std::string> encoding;
